@@ -30,8 +30,8 @@ def format_header(print_flag):
 	print('-' * len(header))
 
 def format_line(line, print_flag):
-	''' formats line for printing
-	'''
+	""" formats and prints line
+	"""
 
 	# additional settings
 	lastname_ljust = 20
@@ -55,6 +55,9 @@ def format_line(line, print_flag):
 		raise ValueError("Error in flag settings value: Value {} was found".format(print_flag))
 
 def print_entire_library():
+	""" prints entire library
+	"""
+
 	people = db.getAllPeople(conn)
 	if len(people) == 0:
 		print("No people exist.")
@@ -66,6 +69,9 @@ def print_entire_library():
 		format_line(people[i], 1)
 	
 def search_by_affilation():
+	""" prints users associtaed with particular affiliation
+	"""
+
 	affiliations = db.getAllAffiliations(conn)
 	if len(affiliations) == 0:
 		print("No affiliations exist.")
@@ -96,6 +102,8 @@ def search_by_affilation():
 		format_line(people[i], 2)
 	
 def create_entry(first, last, mobile, affiliation):
+	""" manual entry creation
+	"""
 
 	# scrub mobile input
 	if mobile[:2] == "+1":
@@ -115,7 +123,10 @@ def create_entry(first, last, mobile, affiliation):
 		print("Error inserting into database: {}".format(e))
 		
 def delete_entry():
-	person = input('Please enter the name of the person you wish to delete (type "all" for all: ')
+	""" manual entry deletion
+	"""
+
+	person = input('Please enter the name of the person you wish to delete (type "all" for all): ')
 	
 	# delete all or get uid of specified user
 	if person == "all":
@@ -146,7 +157,15 @@ def delete_entry():
 			print("Affiliation {} deleted from database".format(aid))
 		
 def import_csv():
+	""" imports contacts from CSV file
+	"""
+
 	filename = input("Please input CSV file name to export to (will be in current directory): ")
+
+	# append file extension if not included
+	if filename[-4:] != ".csv":
+		filename += ".csv"
+
 	try:
 		with open(filename, "r") as csv_file:
 			for line in csv_file:
@@ -168,10 +187,12 @@ def import_csv():
 		print("Import Complete")
 
 def export_csv():
+	""" exports contacts to CSV file
+	"""
+
 	filename = input("Please input CSV file name to export to (will be in current directory): ")
 	
 	# append file extension if not included
-	print(filename[-4:])
 	if filename[-4:] != ".csv":
 		filename += ".csv"
 	
@@ -189,7 +210,15 @@ def export_csv():
 		print("Export Complete")
 
 def import_vcf():
+	""" imports contacts from VCF file
+	"""
+
 	filename = input("Please input VCF file name to import from (must be in current directory): ")
+	
+	# append file extension if not included
+	if filename[-4:] != ".vcf":
+		filename += ".vcf"
+
 	try:
 		with open(filename, "r") as vcf_file:
 			for entry in vobject.readComponents(vcf_file):
@@ -212,10 +241,12 @@ def import_vcf():
 		print("Import Complete")
 		
 def export_vcf():
+	""" exports contacts to VCF file
+	"""
+
 	filename = input("Please input VCF file name to export to (will be in current directory): ")
 	
 	# append file extension if not included
-	print(filename[-4:])
 	if filename[-4:] != ".vcf":
 		filename += ".vcf"
 	
@@ -310,7 +341,7 @@ def main():
 			else:
 				print('\nInvalid choice. Please try again.')
 
-	print("Goodbye!\n")
+	print("Goodbye!")
 	conn.close()
 	sys.exit()
 
