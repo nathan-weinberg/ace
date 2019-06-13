@@ -246,7 +246,10 @@ def import_vcf():
 					first = name[0]
 					last = None
 				mobile = entry.tel.value
-				affiliation = entry.org.value[0]
+				try:
+					affiliation = entry.org.value[0]
+				except:
+					affiliation = None
 				create_entry(first, last, mobile, affiliation)
 				
 	except Exception as e:
