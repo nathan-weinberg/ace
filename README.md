@@ -31,4 +31,3 @@ To install packages run:
 
 ## Bugs
 - Currently can only handle American phone numbers
-- Some issues with file imports

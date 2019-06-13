@@ -212,11 +212,11 @@ def export_csv():
 		filename += ".csv"
 	
 	try:
-		with open(filename, "w") as csv_file:
+		with open(filename, "w", newline='') as csv_file:
 			people = db.getAllPeople(conn)
 			people_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 			for person in people:
-				people_writer.writerow([person[1], person[0], person[2], person[3]])
+				people_writer.writerow([person[0], person[1], person[2], person[3]])
 				
 	except Exception as e:
 		print("Error processing CSV file: {}".format(e))
@@ -292,8 +292,8 @@ def main():
 		print("(2) Find affiliation")
 		print("(3) Write a new entry")
 		print("(4) Delete an entry")
-		print("(5) Source from CSV")
-		print("(6) Source from VCF")
+		print("(5) Import from CSV")
+		print("(6) Import from VCF")
 		print("(7) Export to CSV")
 		print("(8) Export to VCF")
 		print("(0) Exit Program\n")
