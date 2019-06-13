@@ -28,6 +28,3 @@ Quickstart for Local Use:
 To install packages run:
 
 `$ pip install -r requirements.txt`
-
-## Bugs
-- Currently can only handle American phone numbers
