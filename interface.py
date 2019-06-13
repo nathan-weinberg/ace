@@ -246,7 +246,7 @@ def import_vcf():
 					first = name[0]
 					last = None
 				mobile = entry.tel.value
-				affiliation = None
+				affiliation = entry.org.value[0]
 				create_entry(first, last, mobile, affiliation)
 				
 	except Exception as e:
@@ -266,18 +266,19 @@ def export_vcf():
 		filename += ".vcf"
 	
 	try:
-		with open(filename, "a") as vcf_file:
+		with open(filename, "a", newline='') as vcf_file:
 			people = db.getAllPeople(conn)
 			for person in people:
 				new_person = vobject.vCard()
+				new_person.add('n')
+				new_person.n.value = vobject.vcard.Name(family=person[1], given=person[0])
 				new_person.add('fn')
-				new_person.fn.value = person[1] + " " + person[0]
+				new_person.fn.value = person[0] + " " + person[1]
 				new_person.add('tel')
 				new_person.tel.value = person[2]
 				new_person.add('org')
 				new_person.org.value = [person[3]]
-				new_person.serialize()
-				vcf_file.write(str(new_person) + "\n")
+				vcf_file.write(new_person.serialize())
 				
 	except Exception as e:
 		print("Error processing VCF file: {}".format(e))
