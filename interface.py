@@ -175,7 +175,7 @@ def import_csv():
 	""" imports contacts from CSV file
 	"""
 
-	filename = input("Please input CSV file name to export to (will be in current directory): ")
+	filename = input("Please input CSV file name to import from (must be in current directory): ")
 
 	# append file extension if not included
 	if filename[-4:] != ".csv":
@@ -324,12 +324,15 @@ def main():
 			
 			# write new entry
 			elif choice == 3:
-				first = input("Please enter first name: ")
-				last = input("Please enter last name: ")
-				mobile = input("Please enter mobile number: ")
-				affiliation = input("Please enter affiliation: ")
-				create_entry(first, last, mobile, affiliation)
-			
+				try:
+					first = input("Please enter first name: ")
+					last = input("Please enter last name: ")
+					mobile = input("Please enter mobile number: ")
+					affiliation = input("Please enter affiliation: ")
+					create_entry(first, last, mobile, affiliation)
+				except KeyboardInterrupt:
+					print("\nEntry Creation Aborted")
+
 			# delete entry
 			elif choice == 4:
 				delete_entry()
