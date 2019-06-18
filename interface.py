@@ -332,6 +332,8 @@ def main():
 					create_entry(first, last, mobile, affiliation)
 				except KeyboardInterrupt:
 					print("\nEntry Creation Aborted")
+				else:
+					print("Entry Created")
 
 			# delete entry
 			elif choice == 4:
@@ -401,6 +403,6 @@ if __name__ == "__main__":
 	
 	else:
 		# license boilerplate
-		print("GroceryHelper Copyright (C) 2019 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.\n")
+		print("GroceryHelper Copyright (C) 2019 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
 		
 		main()
