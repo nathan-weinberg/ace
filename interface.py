@@ -1,5 +1,5 @@
 '''
-ACE
+Archived Contact Engine
 Copyright (C) 2019 Nathan Weinberg
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -101,12 +101,15 @@ def search_by_affilation():
 	
 	# Returns user-selected affiliation
 	while True:
-		choice = int(input("Select the affiliation you wish to search for: "))
-		if (choice - 1) in affLen:
-			affiliation = affiliations[choice - 1][0]
-			break
-		else:
-			print('Invalid choice. Please try again.')
+		try:
+			choice = int(input("Select the affiliation you wish to search for: "))
+			if (choice - 1) in affLen:
+				affiliation = affiliations[choice - 1][0]
+				break
+			else:
+				print('Invalid choice. Please try again.')
+		except:
+			print('Invalid input. Please try again.')
 
 	aid = db.getAffiliationId(conn, affiliation)
 	people = db.getPeopleFromAid(conn, aid)
@@ -130,6 +133,7 @@ def create_entry(first, last, mobile, affiliation):
 	aid = db.getAffiliationId(conn, affiliation)
 	if not aid:
 		db.addAffiliation(conn, affiliation)
+		print("Affiliation Created")
 		aid = db.getAffiliationId(conn, affiliation)
 		
 	try:
@@ -403,6 +407,6 @@ if __name__ == "__main__":
 	
 	else:
 		# license boilerplate
-		print("GroceryHelper Copyright (C) 2019 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
+		print("Archived Contact Engine Copyright (C) 2019 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
 		
 		main()
