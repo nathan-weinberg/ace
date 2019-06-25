@@ -78,10 +78,12 @@ def print_entire_library():
 		print("No people exist.")
 		return
 	
+	# print block
 	format_header(1)
-	peepLen = range(len(people))
-	for i in peepLen:
+	peepLen = len(people)
+	for i in range(peepLen):
 		format_line(people[i], 1)
+	print("\n{} entries".format(peepLen))
 	
 def search_by_affilation():
 	""" prints users associtaed with particular affiliation
@@ -94,7 +96,6 @@ def search_by_affilation():
 	
 	# Prints list of affiliations
 	affLen = range(len(affiliations))
-	print()
 	for i in affLen:
 		print("(" + str(i + 1) + ") " + affiliations[i][0])
 	print()
@@ -111,13 +112,16 @@ def search_by_affilation():
 		except:
 			print('Invalid input. Please try again.')
 
+	# get relevant data from database
 	aid = db.getAffiliationId(conn, affiliation)
 	people = db.getPeopleFromAid(conn, aid)
 	
+	# print block
 	format_header(2)
-	peepLen = range(len(people))
-	for i in peepLen:
+	peepLen = len(people)
+	for i in range(peepLen):
 		format_line(people[i], 2)
+	print("\n{} entries".format(peepLen))
 	
 def create_entry(first, last, mobile, affiliation):
 	""" manual entry creation
@@ -133,7 +137,6 @@ def create_entry(first, last, mobile, affiliation):
 	aid = db.getAffiliationId(conn, affiliation)
 	if not aid:
 		db.addAffiliation(conn, affiliation)
-		print("Affiliation Created")
 		aid = db.getAffiliationId(conn, affiliation)
 		
 	try:
@@ -149,7 +152,9 @@ def delete_entry():
 	
 	# delete all or get uid of specified user
 	if person == "all":
-		db.deleteAll(conn)
+		db.deleteAllPeople(conn)
+		db.deleteAllAffiliations(conn)
+		print("All entries deleted from database")
 		return
 	else:
 		uid = db.getPersonID(conn, person)
@@ -172,8 +177,9 @@ def delete_entry():
 		# check if affilation is defunct
 		people = db.getPeopleFromAid(conn, aid)
 		if people == []:
+			affName = db.getAffiliationName(conn, aid)
 			db.deleteAffiliation(conn, aid)
-			print("Affiliation {} deleted from database".format(aid))
+			print("Affiliation {} deleted from database".format(affName))
 		
 def import_csv():
 	""" imports contacts from CSV file

@@ -54,6 +54,19 @@ def getAffiliationId(conn, affiliation):
 	else:
 		return aid[0]
 
+def getAffiliationName(conn, aid):
+	''' gets affiliation name from affiliation aid
+		returns false if none found
+	'''
+	cursor = conn.cursor()
+	cursor.execute("SELECT affiliation FROM affiliations WHERE aid = {}".format(aid))
+	affName = cursor.fetchone()
+	cursor.close()
+	if affName == None:
+		return False
+	else:
+		return affName[0]
+
 def getPeopleFromAid(conn, aid):
 	''' gets all people associated with given aid
 	'''
@@ -83,8 +96,8 @@ def deletePerson(conn, uid):
 	conn.commit()
 	cursor.close()
 	
-def deleteAll(conn):
-	''' deletes all from database
+def deleteAllPeople(conn):
+	''' deletes all people from database
 	'''
 	cursor = conn.cursor()
 	cursor.execute("DELETE FROM people")
@@ -103,10 +116,18 @@ def deleteAffiliation(conn, aid):
 	''' delete affiliation associated with given aid
 	'''
 	cursor = conn.cursor()
-	cursor.execute("DELETE FROM affiliations WHERE aid = '{}'".format(aid))
+	cursor.execute("DELETE FROM affiliations WHERE aid = {}".format(aid))
 	conn.commit()
 	cursor.close()
-	
+
+def deleteAllAffiliations(conn):
+	''' deletes all affiliations from database
+	'''
+	cursor = conn.cursor()
+	cursor.execute("DELETE FROM affiliations")
+	conn.commit()
+	cursor.close()
+
 def getPersonAffiliation(conn, uid):
 	''' gets aid of person with given uid
 	'''
