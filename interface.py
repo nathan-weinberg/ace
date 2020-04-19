@@ -1,6 +1,8 @@
+#!/usr/bin/python3
+
 '''
 Archived Contact Engine
-Copyright (C) 2019 Nathan Weinberg
+Copyright (C) 2020 Nathan Weinberg
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -380,6 +382,8 @@ def main():
 	sys.exit()
 
 if __name__ == "__main__":
+
+	# argument parsing
 	if len(sys.argv) == 1:
 		conf = "config.yaml"
 	elif len(sys.argv) == 2:
@@ -402,7 +406,7 @@ if __name__ == "__main__":
 									   password=config['mysql']['password'],
 									   host=config['mysql']['host'],
 									   database=config['mysql']['database'])
-									 
+
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
 			print("Something is wrong with your user name or password")
@@ -410,9 +414,8 @@ if __name__ == "__main__":
 			print("Database does not exist")
 		else:
 			print(err)
-	
-	else:
-		# license boilerplate
-		print("Archived Contact Engine Copyright (C) 2019 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
-		
-		main()
+		sys.exit()
+
+	# license boilerplate
+	print("Archived Contact Engine Copyright (C) 2020 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
+	main()
