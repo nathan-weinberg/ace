@@ -314,13 +314,13 @@ def main():
 		print("(8) Export to VCF")
 		print("(0) Exit Program\n")
 		
-		choice = input("Make a selection: ")
-
 		# ensure choice is type int
 		try:
-			choice = int(choice)
+			choice = int(input("Make a selection: "))
 		except ValueError:
 			print("\nPlease input a number.")
+		except KeyboardInterrupt:
+			break
 		else:
 
 			# CLI Formatting
@@ -377,7 +377,7 @@ def main():
 			else:
 				print('\nInvalid choice. Please try again.')
 
-	print("Goodbye!")
+	print("\nGoodbye!")
 	conn.close()
 	sys.exit()
 
