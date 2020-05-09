@@ -19,6 +19,7 @@ import sys
 import csv
 import yaml
 import vobject
+import argparse
 import database as db
 import mysql.connector
 from mysql.connector import errorcode
@@ -377,24 +378,21 @@ def main():
 			else:
 				print('\nInvalid choice. Please try again.')
 
-	print("\nGoodbye!")
+	print("Goodbye!")
 	conn.close()
 	sys.exit()
 
 if __name__ == "__main__":
 
 	# argument parsing
-	if len(sys.argv) == 1:
-		conf = "config.yaml"
-	elif len(sys.argv) == 2:
-		conf = sys.argv[1]
-	else:
-		print("Improper number of arguments - please see README")
-		sys.exit()
+	parser = argparse.ArgumentParser(description='A simple application designed to display and manipulate contact data')
+	parser.add_argument("--config", default="config.yaml", type=str, help='Configuration YAML file to use')
+	args = parser.parse_args()
+	config_file = args.config
 		
 	# load configuration data
 	try:
-		with open(conf, 'r') as file:
+		with open(config_file, 'r') as file:
 			config = yaml.load(file)
 	except Exception as e:
 		print("Error loading configuration data: ", e)
