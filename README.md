@@ -12,9 +12,12 @@ ACE is a simple text-based CLI program designed to display and manipulate contac
 To run: `$ python3 interface.py`
 
 ### Database
-Addtionally, a MySQL instance must be running for the app to function correctly. You can setup the database for the first time using the provided `schema.sql` file. You must also have a configuration YAML file. By default the program searches for a file named "config.yaml" (based off "config.yaml.example") in the same directory as "interface.py". If you wish to use a different configuaration filename, you may specify it as a command line argument. Example:
+A MySQL instance must be running for the app to function correctly. You can setup the database for the first time using the provided `schema.sql` file. 
 
-`$ python3 interface.py my_config_file.yaml`
+### Configuration
+You must have a configuration YAML file present filled with credentials to connect to the MySQL database instance. By default the program searches for a file named "config.yaml" (based off "config.yaml.example") in the same directory as "interface.py". If you wish to use a different configuaration filename, you may specify it as a command line argument. Example:
+
+`$ python3 interface.py --config my_config_file.yaml`
 
 Quickstart for Local Use:
 
