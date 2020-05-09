@@ -1,6 +1,5 @@
+__pycache__
 config.yaml
-APN_Processor_3.1.py
 *.csv
 *.vcf
 *.pyc
-my_README.md
