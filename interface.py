@@ -387,8 +387,10 @@ if __name__ == "__main__":
 	# argument parsing
 	parser = argparse.ArgumentParser(description='A simple application designed to display and manipulate contact data')
 	parser.add_argument("--config", default="config.yaml", type=str, help='Configuration YAML file to use')
+	parser.add_argument("--test", default=False, action='store_true', help='Flag to use MySQL test credentials')
 	args = parser.parse_args()
 	config_file = args.config
+	test = args.test
 		
 	# load configuration data
 	try:
@@ -400,10 +402,16 @@ if __name__ == "__main__":
 
 	# connect to database
 	try:
-		conn = mysql.connector.connect(user=config['mysql']['user'],
-									   password=config['mysql']['password'],
-									   host=config['mysql']['host'],
-									   database=config['mysql']['database'])
+		if test:
+			conn = mysql.connector.connect(user=config['mysql_test']['user'],
+										   password=config['mysql_test']['password'],
+										   host=config['mysql_test']['host'],
+										   database=config['mysql_test']['database'])
+		else:
+			conn = mysql.connector.connect(user=config['mysql']['user'],
+										   password=config['mysql']['password'],
+										   host=config['mysql']['host'],
+										   database=config['mysql']['database'])
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
