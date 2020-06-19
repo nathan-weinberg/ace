@@ -43,9 +43,10 @@ def format_header(print_flag):
 	# No other case should be found
 	else:
 		raise ValueError("Error in flag settings value: Value {} was found".format(print_flag))
-		
+
 	print(header)
 	print('-' * len(header))
+	return None
 
 def format_line(line, print_flag):
 	""" formats and prints line
@@ -71,6 +72,7 @@ def format_line(line, print_flag):
 	# No other case should be found
 	else:
 		raise ValueError("Error in flag settings value: Value {} was found".format(print_flag))
+	return None
 
 def print_entire_library():
 	""" prints entire library
@@ -79,30 +81,31 @@ def print_entire_library():
 	people = db.getAllPeople(conn)
 	if len(people) == 0:
 		print("No people exist.")
-		return
-	
+		return None
+
 	# print block
 	format_header(1)
 	peepLen = len(people)
 	for i in range(peepLen):
 		format_line(people[i], 1)
 	print("\n{} entries".format(peepLen))
-	
+	return None
+
 def search_by_affilation():
-	""" prints users associtaed with particular affiliation
+	""" prints users associated with particular affiliation
 	"""
 
 	affiliations = db.getAllAffiliations(conn)
 	if len(affiliations) == 0:
 		print("No affiliations exist.")
-		return
-	
+		return None
+
 	# Prints list of affiliations
 	affLen = range(len(affiliations))
 	for i in affLen:
 		print("(" + str(i + 1) + ") " + affiliations[i][0])
 	print()
-	
+
 	# Returns user-selected affiliation
 	while True:
 		try:
@@ -112,20 +115,24 @@ def search_by_affilation():
 				break
 			else:
 				print('Invalid choice. Please try again.')
-		except:
+		except KeyboardInterrupt:
+			print()
+			return None
+		except ValueError:
 			print('Invalid input. Please try again.')
 
 	# get relevant data from database
 	aid = db.getAffiliationId(conn, affiliation)
 	people = db.getPeopleFromAid(conn, aid)
-	
+
 	# print block
 	format_header(2)
 	peepLen = len(people)
 	for i in range(peepLen):
 		format_line(people[i], 2)
 	print("\n{} entries".format(peepLen))
-	
+	return None
+
 def create_entry(first, last, mobile, affiliation):
 	""" manual entry creation
 	"""
@@ -135,33 +142,40 @@ def create_entry(first, last, mobile, affiliation):
 		mobile = mobile[2:]
 	if ("(" or ")" or "-") not in mobile:
 		mobile = "(" + mobile[0:3] + ")" + mobile[3:6] + "-" + mobile[6:]
-	
-	# check for first time occurence of affilation
+
+	# check for first time occurrence of affiliation
 	aid = db.getAffiliationId(conn, affiliation)
 	if not aid:
 		db.addAffiliation(conn, affiliation)
 		aid = db.getAffiliationId(conn, affiliation)
-		
+
 	try:
 		db.addPerson(conn, first, last, mobile, aid)
 	except Exception as e:
 		print("Error inserting into database: {}".format(e))
-		
-def delete_entry():
+	else:
+		print("Person {} {} added to database".format(first, last))
+	return None
+
+def delete_entry(person):
 	""" manual entry deletion
 	"""
 
-	person = input('Please enter the name of the person you wish to delete (type "all" for all): ')
-	
+	# immediately exit if no people exist in db
+	people = db.getAllPeople(conn)
+	if len(people) == 0:
+		print("No people exist.")
+		return None
+
 	# delete all or get uid of specified user
 	if person == "all":
 		db.deleteAllPeople(conn)
 		db.deleteAllAffiliations(conn)
 		print("All entries deleted from database")
-		return
+		return None
 	else:
 		uid = db.getPersonID(conn, person)
-	
+
 	# person not found in database
 	if uid == -1:
 		print("Person not found in database")
@@ -176,19 +190,19 @@ def delete_entry():
 			print("Error deleting from database: {}".format(e))
 		else:
 			print("Person {} deleted from database".format(person))
-			
-		# check if affilation is defunct
+
+		# check if affiliation is defunct
 		people = db.getPeopleFromAid(conn, aid)
 		if people == []:
 			affName = db.getAffiliationName(conn, aid)
 			db.deleteAffiliation(conn, aid)
 			print("Affiliation {} deleted from database".format(affName))
-		
-def import_csv():
+
+	return None
+
+def import_csv(filename):
 	""" imports contacts from CSV file
 	"""
-
-	filename = input("Please input CSV file name to import from (must be in current directory): ")
 
 	# append file extension if not included
 	if filename[-4:] != ".csv":
@@ -199,50 +213,48 @@ def import_csv():
 			for line in csv_file:
 				line = line[:-1]
 				line = line.split(',')
-				
+
 				# remove apostrophes from fields as they cause issues with SQL
 				first = line[0].replace("'","")
 				last = line[1].replace("'","")
 				mobile = line[2].replace("'","")
 				affiliation = line[3].replace("'","")
-				
+
 				create_entry(first, last, mobile, affiliation)
-				
+
 	except Exception as e:
 		print("Error processing CSV file: {}".format(e))
-		
+		return None
 	else:
-		print("Import Complete")
+		print("Successfully imported from CSV")
+		return None
 
-def export_csv():
+def export_csv(filename):
 	""" exports contacts to CSV file
 	"""
 
-	filename = input("Please input CSV file name to export to (will be in current directory): ")
-	
 	# append file extension if not included
 	if filename[-4:] != ".csv":
 		filename += ".csv"
-	
+
 	try:
 		with open(filename, "w", newline='') as csv_file:
 			people = db.getAllPeople(conn)
 			people_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 			for person in people:
 				people_writer.writerow([person[0], person[1], person[2], person[3]])
-				
+
 	except Exception as e:
 		print("Error processing CSV file: {}".format(e))
-		
+		return None
 	else:
-		print("Export Complete")
+		print("Successfully exported to CSV")
+		return None
 
-def import_vcf():
+def import_vcf(filename):
 	""" imports contacts from VCF file
 	"""
 
-	filename = input("Please input VCF file name to import from (must be in current directory): ")
-	
 	# append file extension if not included
 	if filename[-4:] != ".vcf":
 		filename += ".vcf"
@@ -263,24 +275,23 @@ def import_vcf():
 					affiliation = entry.org.value[0]
 				except:
 					affiliation = None
-				create_entry(first, last, mobile, affiliation)
-				
+				create_entry(first, last, mobile, affiliation)	
+
 	except Exception as e:
 		print("Error processing VCF file: {}".format(e))
-
+		return None
 	else:
-		print("Import Complete")
-		
-def export_vcf():
+		print("Successfully imported from VCF")
+		return None
+
+def export_vcf(filename):
 	""" exports contacts to VCF file
 	"""
 
-	filename = input("Please input VCF file name to export to (will be in current directory): ")
-	
 	# append file extension if not included
 	if filename[-4:] != ".vcf":
 		filename += ".vcf"
-	
+
 	try:
 		with open(filename, "a", newline='') as vcf_file:
 			people = db.getAllPeople(conn)
@@ -295,12 +306,13 @@ def export_vcf():
 				new_person.add('org')
 				new_person.org.value = [person[3]]
 				vcf_file.write(new_person.serialize())
-				
+
 	except Exception as e:
 		print("Error processing VCF file: {}".format(e))
-		
+		return None
 	else:
-		print("Export Complete")
+		print("Successfully exported to VCF")
+		return None
 
 def main():
 	while True:
@@ -330,11 +342,11 @@ def main():
 			# print whole library
 			if choice == 1:
 				print_entire_library()
-			
-			# sort by avaliable affliations
+
+			# sort by available affiliations
 			elif choice == 2:
 				search_by_affilation()
-			
+
 			# write new entry
 			elif choice == 3:
 				try:
@@ -342,38 +354,62 @@ def main():
 					last = input("Please enter last name: ")
 					mobile = input("Please enter mobile number: ")
 					affiliation = input("Please enter affiliation: ")
-					create_entry(first, last, mobile, affiliation)
 				except KeyboardInterrupt:
 					print("\nEntry Creation Aborted")
 				else:
-					print("Entry Created")
+					create_entry(first, last, mobile, affiliation)
 
 			# delete entry
 			elif choice == 4:
-				delete_entry()
+				try:
+					person = input('Please enter the name of the person you wish to delete (type "all" for all): ')
+				except KeyboardInterrupt:
+					print("\nEntry Deletion Aborted")
+				else:
+					delete_entry(person)
 
-			# source from csv
+			# import from csv
 			elif choice == 5:
 				print("NOTE: CSV must be in format <first_name>,<last_name>,<mobile>,<affiliation>")
-				import_csv()
+				try:
+					filename = input("Please input CSV file name to import from (must be in current directory): ")
+				except KeyboardInterrupt:
+					print("\nCSV Import Aborted")
+				else:
+					import_csv(filename)
 
-			# source from vcf
+			# import from vcf
 			elif choice == 6:
-				import_vcf()
+				try:
+					filename = input("Please input VCF file name to import from (must be in current directory): ")
+				except KeyboardInterrupt:
+					print("\nVCF Import Aborted")
+				else:
+					import_vcf(filename)
 
 			# export to csv
 			elif choice == 7:
 				print("NOTE: CSV will be in format <first_name>,<last_name>,<mobile>,<affiliation>")
-				export_csv()
+				try:
+					filename = input("Please input CSV file name to export to (will be in current directory): ")
+				except KeyboardInterrupt:
+					print("\nCSV Export Aborted")
+				else:
+					export_csv(filename)
 
 			# export to vcf
 			elif choice == 8:
-				export_vcf()
+				try:
+					filename = input("Please input VCF file name to export to (will be in current directory): ")
+				except KeyboardInterrupt:
+					print("\nVCF Export Aborted")
+				else:
+					export_vcf(filename)
 
 			# exit
 			elif choice == 0:
 				break
-			
+
 			# invalid choice
 			else:
 				print('\nInvalid choice. Please try again.')
@@ -391,7 +427,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	config_file = args.config
 	test = args.test
-		
+
 	# load configuration data
 	try:
 		with open(config_file, 'r') as file:
