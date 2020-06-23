@@ -137,7 +137,13 @@ def create_entry(first, last, mobile, affiliation):
 	""" manual entry creation
 	"""
 
-	# scrub mobile input
+	# remove apostrophes from fields as they cause issues with SQL
+	first = first.replace("'","")
+	last = last.replace("'","")
+	mobile = mobile.replace("'","")
+	affiliation = affiliation.replace("'","")
+
+	# further scrub mobile input
 	if mobile[:2] == "+1":
 		mobile = mobile[2:]
 	if ("(" or ")" or "-") not in mobile:
@@ -213,13 +219,6 @@ def import_csv(filename):
 			for line in csv_file:
 				line = line[:-1]
 				line = line.split(',')
-
-				# remove apostrophes from fields as they cause issues with SQL
-				first = line[0].replace("'","")
-				last = line[1].replace("'","")
-				mobile = line[2].replace("'","")
-				affiliation = line[3].replace("'","")
-
 				create_entry(first, last, mobile, affiliation)
 
 	except Exception as e:
