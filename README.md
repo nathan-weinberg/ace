@@ -1,7 +1,7 @@
 # ACE - Archived Contact Engine
 
 ## Purpose
-ACE is a simple text-based CLI program designed to display and manipulate contact data.
+ACE is a text-based CLI program designed to display and manipulate contact data. It aims to provide a simple but intutive interface combined with precision relational database control.
 
 ### Features
 - Search for contacts with specific affiliations
