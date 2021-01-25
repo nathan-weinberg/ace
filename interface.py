@@ -219,7 +219,7 @@ def import_csv(filename):
 			for line in csv_file:
 				line = line[:-1]
 				line = line.split(',')
-				create_entry(first, last, mobile, affiliation)
+				create_entry(line[0], line[1], line[2], line[3])
 
 	except Exception as e:
 		print("Error processing CSV file: {}".format(e))
@@ -274,7 +274,7 @@ def import_vcf(filename):
 					affiliation = entry.org.value[0]
 				except:
 					affiliation = None
-				create_entry(first, last, mobile, affiliation)	
+				create_entry(first, last, mobile, affiliation)
 
 	except Exception as e:
 		print("Error processing VCF file: {}".format(e))
@@ -325,7 +325,7 @@ def main():
 		print("(7) Export to CSV")
 		print("(8) Export to VCF")
 		print("(0) Exit Program\n")
-		
+
 		# ensure choice is type int
 		try:
 			choice = int(input("Make a selection: "))
