@@ -7,6 +7,7 @@ def getAllPeople(conn):
 	cursor.close()
 	return people
 
+
 def getAllAffiliations(conn):
 	''' gets all affiliation names
 	'''
@@ -15,7 +16,8 @@ def getAllAffiliations(conn):
 	affiliations = cursor.fetchall()
 	cursor.close()
 	return affiliations
-	
+
+
 def getPersonID(conn, name):
 	''' takes in first and/or last name
 		returns uid if one person found
@@ -33,13 +35,14 @@ def getPersonID(conn, name):
 		cursor.execute("SELECT uid FROM people WHERE first_name = '{0}' OR last_name = '{0}'".format(name))
 		uid = cursor.fetchall()
 	cursor.close()
-	
+
 	if len(uid) == 1:
 		return uid[0][0]
 	elif uid == []:
 		return -1
 	else:
 		return -2
+
 
 def getAffiliationId(conn, affiliation):
 	''' gets affiliation id from affiliation name
@@ -49,10 +52,11 @@ def getAffiliationId(conn, affiliation):
 	cursor.execute("SELECT aid FROM affiliations WHERE affiliation = '{}'".format(affiliation))
 	aid = cursor.fetchone()
 	cursor.close()
-	if aid == None:
+	if aid is None:
 		return False
 	else:
 		return aid[0]
+
 
 def getAffiliationName(conn, aid):
 	''' gets affiliation name from affiliation aid
@@ -62,10 +66,11 @@ def getAffiliationName(conn, aid):
 	cursor.execute("SELECT affiliation FROM affiliations WHERE aid = {}".format(aid))
 	affName = cursor.fetchone()
 	cursor.close()
-	if affName == None:
+	if affName is None:
 		return False
 	else:
 		return affName[0]
+
 
 def getPeopleFromAid(conn, aid):
 	''' gets all people associated with given aid
@@ -75,18 +80,20 @@ def getPeopleFromAid(conn, aid):
 	people = cursor.fetchall()
 	cursor.close()
 	return people
-	
+
+
 def addPerson(conn, first_name, last_name, phone_number, aid=None):
 	''' adds Person with or without affiliation
 	'''
 	cursor = conn.cursor()
-	if aid == None:
+	if aid is None:
 		cursor.execute("INSERT INTO people(first_name, last_name, phone_number) VALUES ('{}', '{}', '{}')".format(first_name, last_name, phone_number))
-	else:	
+	else:
 		cursor.execute("INSERT INTO people(first_name, last_name, phone_number, affiliated_with) VALUES ('{}', '{}', '{}', {})".format(first_name, last_name, phone_number, aid))
-		
+
 	conn.commit()
 	cursor.close()
+
 
 def deletePerson(conn, uid):
 	''' deletes person assoicated with given uid
@@ -95,7 +102,8 @@ def deletePerson(conn, uid):
 	cursor.execute("DELETE FROM people WHERE uid = {}".format(uid))
 	conn.commit()
 	cursor.close()
-	
+
+
 def deleteAllPeople(conn):
 	''' deletes all people from database
 	'''
@@ -103,6 +111,7 @@ def deleteAllPeople(conn):
 	cursor.execute("DELETE FROM people")
 	conn.commit()
 	cursor.close()
+
 
 def addAffiliation(conn, affiliation):
 	''' add Affiliation
@@ -112,6 +121,7 @@ def addAffiliation(conn, affiliation):
 	conn.commit()
 	cursor.close()
 
+
 def deleteAffiliation(conn, aid):
 	''' delete affiliation associated with given aid
 	'''
@@ -119,6 +129,7 @@ def deleteAffiliation(conn, aid):
 	cursor.execute("DELETE FROM affiliations WHERE aid = {}".format(aid))
 	conn.commit()
 	cursor.close()
+
 
 def deleteAllAffiliations(conn):
 	''' deletes all affiliations from database
@@ -128,6 +139,7 @@ def deleteAllAffiliations(conn):
 	conn.commit()
 	cursor.close()
 
+
 def getPersonAffiliation(conn, uid):
 	''' gets aid of person with given uid
 	'''
@@ -136,6 +148,7 @@ def getPersonAffiliation(conn, uid):
 	aid = cursor.fetchone()[0]
 	cursor.close()
 	return aid
+
 
 def changePersonAffiliation(conn, uid, aid):
 	''' change aid of person with given uid
