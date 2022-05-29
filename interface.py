@@ -2,7 +2,7 @@
 
 '''
 Archived Contact Engine
-Copyright (C) 2020 Nathan Weinberg
+Copyright (C) 2022 Nathan Weinberg
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -24,6 +24,7 @@ import database as db
 import mysql.connector
 from mysql.connector import errorcode
 
+
 def format_header(print_flag):
 	""" prints header
 	"""
@@ -32,10 +33,10 @@ def format_header(print_flag):
 	lastname_ljust = 20
 	firstname_ljust = 20
 	mobile_ljust = 15
-	affiliation_ljust = 15
 
 	# w/ affiliation
 	if print_flag == 1:
+		affiliation_ljust = 15
 		header = "\n{} {} {} {}".format("First Name".ljust(firstname_ljust), "Last Name".ljust(lastname_ljust), "Mobile".ljust(mobile_ljust), "Affiliation".ljust(affiliation_ljust))
 	# w/o affiliation
 	elif print_flag == 2:
@@ -48,6 +49,7 @@ def format_header(print_flag):
 	print('-' * len(header))
 	return None
 
+
 def format_line(line, print_flag):
 	""" formats and prints line
 	"""
@@ -56,7 +58,6 @@ def format_line(line, print_flag):
 	lastname_ljust = 20
 	firstname_ljust = 20
 	mobile_ljust = 15
-	affiliation_ljust = 15
 
 	firstname = line[0].ljust(firstname_ljust)
 	lastname = line[1].ljust(lastname_ljust)
@@ -74,6 +75,7 @@ def format_line(line, print_flag):
 		raise ValueError("Error in flag settings value: Value {} was found".format(print_flag))
 	return None
 
+
 def print_entire_library():
 	""" prints entire library
 	"""
@@ -90,6 +92,7 @@ def print_entire_library():
 		format_line(people[i], 1)
 	print("\n{} entries".format(peepLen))
 	return None
+
 
 def search_by_affilation():
 	""" prints users associated with particular affiliation
@@ -133,15 +136,16 @@ def search_by_affilation():
 	print("\n{} entries".format(peepLen))
 	return None
 
+
 def create_entry(first, last, mobile, affiliation):
 	""" manual entry creation
 	"""
 
 	# remove apostrophes from fields as they cause issues with SQL
-	first = first.replace("'","")
-	last = last.replace("'","")
-	mobile = mobile.replace("'","")
-	affiliation = affiliation.replace("'","")
+	first = first.replace("'", "")
+	last = last.replace("'", "")
+	mobile = mobile.replace("'", "")
+	affiliation = affiliation.replace("'", "")
 
 	# further scrub mobile input
 	if mobile[:2] == "+1":
@@ -162,6 +166,7 @@ def create_entry(first, last, mobile, affiliation):
 	else:
 		print("Person {} {} added to database".format(first, last))
 	return None
+
 
 def delete_entry(person):
 	""" manual entry deletion
@@ -206,6 +211,7 @@ def delete_entry(person):
 
 	return None
 
+
 def import_csv(filename):
 	""" imports contacts from CSV file
 	"""
@@ -228,6 +234,7 @@ def import_csv(filename):
 		print("Successfully imported from CSV")
 		return None
 
+
 def export_csv(filename):
 	""" exports contacts to CSV file
 	"""
@@ -249,6 +256,7 @@ def export_csv(filename):
 	else:
 		print("Successfully exported to CSV")
 		return None
+
 
 def import_vcf(filename):
 	""" imports contacts from VCF file
@@ -283,6 +291,7 @@ def import_vcf(filename):
 		print("Successfully imported from VCF")
 		return None
 
+
 def export_vcf(filename):
 	""" exports contacts to VCF file
 	"""
@@ -312,6 +321,7 @@ def export_vcf(filename):
 	else:
 		print("Successfully exported to VCF")
 		return None
+
 
 def main():
 	while True:
@@ -417,6 +427,7 @@ def main():
 	conn.close()
 	sys.exit()
 
+
 if __name__ == "__main__":
 
 	# argument parsing
@@ -438,15 +449,19 @@ if __name__ == "__main__":
 	# connect to database
 	try:
 		if test:
-			conn = mysql.connector.connect(user=config['mysql_test']['user'],
-										   password=config['mysql_test']['password'],
-										   host=config['mysql_test']['host'],
-										   database=config['mysql_test']['database'])
+			conn = mysql.connector.connect(
+				user=config['mysql_test']['user'],
+				password=config['mysql_test']['password'],
+				host=config['mysql_test']['host'],
+				database=config['mysql_test']['database']
+			)
 		else:
-			conn = mysql.connector.connect(user=config['mysql']['user'],
-										   password=config['mysql']['password'],
-										   host=config['mysql']['host'],
-										   database=config['mysql']['database'])
+			conn = mysql.connector.connect(
+				user=config['mysql']['user'],
+				password=config['mysql']['password'],
+				host=config['mysql']['host'],
+				database=config['mysql']['database']
+			)
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -458,5 +473,5 @@ if __name__ == "__main__":
 		sys.exit()
 
 	# license boilerplate
-	print("Archived Contact Engine Copyright (C) 2020 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
+	print("Archived Contact Engine Copyright (C) 2022 Nathan Weinberg\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.")
 	main()
