@@ -441,7 +441,7 @@ if __name__ == "__main__":
 	# load configuration data
 	try:
 		with open(config_file, 'r') as file:
-			config = yaml.load(file)
+			config = yaml.safe_load(file)
 	except Exception as e:
 		print("Error loading configuration data: ", e)
 		sys.exit()
